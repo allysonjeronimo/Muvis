@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Muvis</string>
+
+    <!-- MovieListFragment-->
+    <string name="movie_list_title">Movies</string>
 </resources>
