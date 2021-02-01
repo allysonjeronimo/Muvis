@@ -33,7 +33,6 @@ class MovieListViewModel(
                 _isLoadingLiveData.value = false
                 _errorOnLoadingLiveData.value = R.string.movie_list_error_on_loading
             }
-
         }
     }
 
