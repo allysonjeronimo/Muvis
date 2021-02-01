@@ -4,19 +4,36 @@ import androidx.lifecycle.*
 import com.allysonjeronimo.muvis.model.db.entity.Movie
 import com.allysonjeronimo.muvis.repository.MovieRepository
 import kotlinx.coroutines.launch
+import com.allysonjeronimo.muvis.R
 
 class MovieListViewModel(
     private val repository:MovieRepository
 ) : ViewModel() {
 
-    private val moviesLiveData = MutableLiveData<List<Movie>>()
+    private val _moviesLiveData = MutableLiveData<List<Movie>>()
+    private val _isLoadingLiveData = MutableLiveData<Boolean>()
+    private val _errorOnLoadingLiveData = MutableLiveData<Int>()
 
-    fun moviesLiveData() = moviesLiveData as LiveData<List<Movie>>
+    val moviesLiveData:LiveData<List<Movie>>
+        get() = _moviesLiveData
+
+    val isLoadingLiveData:LiveData<Boolean>
+        get() = _isLoadingLiveData
+
+    val errorOnLoadingLiveData:LiveData<Int>
+        get() = _errorOnLoadingLiveData
 
     fun loadMovies(){
         viewModelScope.launch {
-            val movies = repository.movies()
-            moviesLiveData.value = movies
+            try{
+                _isLoadingLiveData.value = true
+                _moviesLiveData.value = repository.movies()
+                _isLoadingLiveData.value = false
+            }catch(ex:Exception){
+                _isLoadingLiveData.value = false
+                _errorOnLoadingLiveData.value = R.string.movie_list_error_on_loading
+            }
+
         }
     }
 

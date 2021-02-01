@@ -2,6 +2,7 @@ package com.allysonjeronimo.muvis.ui.movielist
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.allysonjeronimo.muvis.R
@@ -10,6 +11,7 @@ import com.allysonjeronimo.muvis.model.network.BASE_URL
 import com.allysonjeronimo.muvis.model.network.MovieDBApi
 import com.allysonjeronimo.muvis.model.network.entity.MovieDBResponse
 import com.allysonjeronimo.muvis.repository.MovieDataRepository
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.movie_list_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,9 +46,27 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
     }
 
     private fun observeEvents() {
-        viewModel.moviesLiveData().observe(this.viewLifecycleOwner, {
+        viewModel.moviesLiveData.observe(this.viewLifecycleOwner, {
             movies -> recycler_movies.adapter = MovieListAdapter(movies)
         })
+        viewModel.isLoadingLiveData.observe(this.viewLifecycleOwner, {
+            isLoading -> updateProgressVisibility(isLoading)
+        })
+        viewModel.errorOnLoadingLiveData.observe(this.viewLifecycleOwner, {
+            stringResource -> showMessage(stringResource)
+        })
+    }
+
+    private fun updateProgressVisibility(isLoading: Boolean) {
+        progress.visibility = if(isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun showMessage(stringResource:Int){
+        Snackbar.make(
+            requireView(),
+            stringResource,
+            Snackbar.LENGTH_SHORT
+        ).show()
     }
 
     override fun onStart() {

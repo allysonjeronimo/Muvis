@@ -3,4 +3,5 @@
 
     <!-- MovieListFragment-->
     <string name="movie_list_title">Movies</string>
+    <string name="movie_list_error_on_loading">There was an error when loading movies</string>
 </resources>
