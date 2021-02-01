@@ -9,6 +9,8 @@ import com.allysonjeronimo.muvis.model.network.API_KEY
 import com.allysonjeronimo.muvis.model.network.BASE_URL
 import com.allysonjeronimo.muvis.model.network.MovieDBApi
 import com.allysonjeronimo.muvis.model.network.entity.MovieDBResponse
+import com.allysonjeronimo.muvis.repository.MovieDataRepository
+import kotlinx.android.synthetic.main.movie_list_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,8 +23,11 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MovieListViewModel::class.java)
+        createViewModel()
+        observeEvents()
+    }
 
+    private fun createViewModel(){
         val api = Retrofit
             .Builder()
             .baseUrl(BASE_URL)
@@ -30,25 +35,23 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
             .build()
             .create(MovieDBApi::class.java)
 
+        val repository = MovieDataRepository(api)
 
-        api.movies(API_KEY).enqueue(object:Callback<MovieDBResponse>{
-            override fun onResponse(
-                call: Call<MovieDBResponse>,
-                response: Response<MovieDBResponse>
-            ) {
-                if(response.isSuccessful){
+        viewModel = ViewModelProvider(
+            this,
+            MovieListViewModel.MovieListViewModelFactory(repository))
+            .get(MovieListViewModel::class.java)
+    }
 
-                    Log.i(
-                        MovieListFragment::class.simpleName,
-                        response.body().toString()
-                    )
-                }
-            }
-
-            override fun onFailure(call: Call<MovieDBResponse>, t: Throwable) {
-                Log.e(MovieListFragment::class.simpleName, t.message.toString())
-            }
+    private fun observeEvents() {
+        viewModel.moviesLiveData().observe(this.viewLifecycleOwner, {
+            movies -> recycler_movies.adapter = MovieListAdapter(movies)
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.loadMovies()
     }
 
 }
