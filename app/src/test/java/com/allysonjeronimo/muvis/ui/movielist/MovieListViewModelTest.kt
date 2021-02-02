@@ -53,13 +53,13 @@ class MovieListViewModelTest{
         )
 
         coEvery {
-            repository.getMovies()
+            repository.getPopular()
         } returns mockedList
 
         viewModel.loadMovies()
 
         coVerify {
-            repository.getMovies()
+            repository.getPopular()
         }
         coVerify {
             moviesLiveDataObserver.onChanged(mockedList)
@@ -72,13 +72,13 @@ class MovieListViewModelTest{
         val viewModel = instantiateViewModel()
 
         coEvery {
-            repository.getMovies()
+            repository.getPopular()
         } throws Exception()
 
         viewModel.loadMovies()
 
         coVerify {
-            repository.getMovies()
+            repository.getPopular()
         }
         coVerify {
             errorOnLoadingLiveDataObserver.onChanged(R.string.movie_list_error_on_loading)

@@ -10,9 +10,15 @@ class MovieDataRepository(
     private val api: MovieDBApi
 ) : MovieRepository{
 
-    override suspend fun getMovies(): List<Movie> {
+    override suspend fun getPopular(): List<Movie> {
         return withContext(Dispatchers.IO){
-            api.movies(API_KEY).getMoviesAsModel()
+            api.getPopular(API_KEY).getMoviesAsEntities()
+        }
+    }
+
+    override suspend fun getDetails(movieId:Int): Movie {
+        return withContext(Dispatchers.IO){
+            api.getDetails(API_KEY, movieId).toMovieEntity()
         }
     }
 }

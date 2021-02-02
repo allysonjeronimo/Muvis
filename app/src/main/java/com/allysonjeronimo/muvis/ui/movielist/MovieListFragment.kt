@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.allysonjeronimo.muvis.R
+import com.allysonjeronimo.muvis.model.db.entity.Movie
 import com.allysonjeronimo.muvis.model.network.MovieDBApi
 import com.allysonjeronimo.muvis.repository.MovieDataRepository
 import com.google.android.material.snackbar.Snackbar
@@ -35,7 +37,7 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
         viewModel.moviesLiveData.observe(this.viewLifecycleOwner, {
             movies ->
             updateRecyclerViewVisibility(true)
-            recycler_movies.adapter = MovieListAdapter(movies)
+            recycler_movies.adapter = MovieListAdapter(movies, this::onClickMovie)
         })
         viewModel.isLoadingLiveData.observe(this.viewLifecycleOwner, {
             isLoading ->
@@ -63,9 +65,13 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
         ).show()
     }
 
+    private fun onClickMovie(movie: Movie){
+        val action = MovieListFragmentDirections.actionMovieListFragmentToMovieDetailsFragment()
+        findNavController().navigate(action)
+    }
+
     override fun onStart() {
         super.onStart()
         viewModel.loadMovies()
     }
-
 }

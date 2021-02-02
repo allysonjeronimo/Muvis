@@ -12,13 +12,9 @@ data class MovieDBResponse(
   var results:List<MovieDBResponseItem>
 ){
 
-    fun getMoviesAsModel() : List<Movie>{
+    fun getMoviesAsEntities() : List<Movie>{
         return results.map{
-            movieResponse -> Movie(
-                movieResponse.id,
-                movieResponse.title,
-                movieResponse.posterPath
-            )
+            movieResponse -> movieResponse.toMovieEntity()
         }
     }
 }

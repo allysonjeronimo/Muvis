@@ -27,7 +27,7 @@ class MovieListViewModel(
         viewModelScope.launch {
             try{
                 _isLoadingLiveData.value = true
-                _moviesLiveData.value = repository.getMovies()
+                _moviesLiveData.value = repository.getPopular()
                 _isLoadingLiveData.value = false
             }catch(ex:Exception){
                 _isLoadingLiveData.value = false
@@ -39,8 +39,7 @@ class MovieListViewModel(
     class MovieListViewModelFactory(
         private val repository: MovieRepository
     ) : ViewModelProvider.Factory{
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return MovieListViewModel(repository) as T
-        }
+        override fun <T : ViewModel?> create(modelClass: Class<T>) =
+            MovieListViewModel(repository) as T
     }
 }
