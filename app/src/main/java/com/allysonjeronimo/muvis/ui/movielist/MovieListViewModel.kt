@@ -27,7 +27,7 @@ class MovieListViewModel(
         viewModelScope.launch {
             try{
                 _isLoadingLiveData.value = true
-                _moviesLiveData.value = repository.movies()
+                _moviesLiveData.value = repository.getMovies()
                 _isLoadingLiveData.value = false
             }catch(ex:Exception){
                 _isLoadingLiveData.value = false
