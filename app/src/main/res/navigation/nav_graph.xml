@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/movieDetailsFragment"
         android:name="com.allysonjeronimo.muvis.ui.moviedetails.MovieDetailsFragment"
-        android:label="movie_details_fragment"
+        android:label="@string/movie_details_title"
         tools:layout="@layout/movie_details_fragment" />
 
 </navigation>
