@@ -15,6 +15,7 @@ buildscript {
         junit_version = "4.13.1"
         arch_test_version = "2.1.0"
         mockk_version = "1.10.5"
+        mockito_version = "2.2.0"
     }
     repositories {
         google()
