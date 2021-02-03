@@ -18,7 +18,7 @@ class MovieDataRepository(
 
     override suspend fun getDetails(movieId:Int): Movie {
         return withContext(Dispatchers.IO){
-            api.getDetails(API_KEY, movieId).toMovieEntity()
+            api.getDetails(movieId, API_KEY).toMovieEntity()
         }
     }
 }

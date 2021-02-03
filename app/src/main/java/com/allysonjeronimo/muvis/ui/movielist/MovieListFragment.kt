@@ -66,7 +66,8 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
     }
 
     private fun onClickMovie(movie: Movie){
-        val action = MovieListFragmentDirections.actionMovieListFragmentToMovieDetailsFragment()
+        val action = MovieListFragmentDirections
+            .actionMovieListFragmentToMovieDetailsFragment(movie.id)
         findNavController().navigate(action)
     }
 

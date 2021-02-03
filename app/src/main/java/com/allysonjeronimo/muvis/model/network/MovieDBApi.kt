@@ -17,8 +17,9 @@ interface MovieDBApi {
 
     @GET("/3/movie/{movie_id}")
     suspend fun getDetails(
-        @Query("api_key") apiKey:String,
-        @Path("movie_id") movieId:Int)
+        @Path("movie_id") movieId:Int,
+        @Query("api_key") apiKey:String
+        )
     : MovieDBResponseItem
 
     companion object{

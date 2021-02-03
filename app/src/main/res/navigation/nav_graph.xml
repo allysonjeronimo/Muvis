@@ -19,6 +19,11 @@
         android:id="@+id/movieDetailsFragment"
         android:name="com.allysonjeronimo.muvis.ui.moviedetails.MovieDetailsFragment"
         android:label="@string/movie_details_title"
-        tools:layout="@layout/movie_details_fragment" />
+        tools:layout="@layout/movie_details_fragment" >
+        <argument
+            android:name="movie_id"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 
 </navigation>
