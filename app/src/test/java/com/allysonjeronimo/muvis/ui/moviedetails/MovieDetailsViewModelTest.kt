@@ -35,6 +35,7 @@ class MovieDetailsViewModelTest{
     @Before
     fun setup(){
         Dispatchers.setMain(testDispatcher)
+        instantiateViewModel()
     }
 
     @After
@@ -43,8 +44,7 @@ class MovieDetailsViewModelTest{
         testDispatcher.cleanupTestCoroutines()
     }
 
-    @Before
-    fun instantiateViewModel() {
+    private fun instantiateViewModel(){
         viewModel = MovieDetailsViewModel(repository)
         viewModel.movieLiveData.observeForever(movieLiveDataObserver)
         viewModel.errorLiveData.observeForever(errorOnLoadingLiveDataObserver)
@@ -53,7 +53,7 @@ class MovieDetailsViewModelTest{
     @Test
     fun `when view model loadMovieDetails gets success then sets movieLiveData`(){
 
-        val mockedMovie = Movie(1, "Title 1", "")
+        val mockedMovie = Movie(1, "Title 1", "Overview 1", "", "")
 
         coEvery {
             repository.getDetails(1)

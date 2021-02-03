@@ -6,15 +6,20 @@ import com.google.gson.annotations.SerializedName
 data class MovieDBResponseItem(
     var id: Int,
     var title: String,
+    var overview:String?,
     @SerializedName("poster_path")
-    var posterPath:String?
+    var posterPath:String?,
+    @SerializedName("backdrop_path")
+    var backdropPath:String?
 ){
 
     fun toMovieEntity() : Movie {
         return Movie(
             id,
             title,
-            posterPath
+            overview,
+            posterPath,
+            backdropPath
         )
     }
 }

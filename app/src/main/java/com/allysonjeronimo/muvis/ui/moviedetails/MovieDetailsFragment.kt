@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import com.allysonjeronimo.muvis.R
+import com.allysonjeronimo.muvis.extensions.load
 import com.allysonjeronimo.muvis.model.db.entity.Movie
 import com.allysonjeronimo.muvis.model.network.MovieDBApi
 import com.allysonjeronimo.muvis.repository.MovieDataRepository
@@ -40,10 +41,14 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
     private fun observeEvents() {
         viewModel.movieLiveData.observe(this.viewLifecycleOwner, {
-            movie -> showDetails(movie)
+            movie ->
+            updateViewsVisibility(true)
+            showDetails(movie)
         })
         viewModel.isLoadingLiveData.observe(this.viewLifecycleOwner, {
-            isLoading -> updateProgressVisibility(isLoading)
+            isLoading ->
+            updateViewsVisibility(!isLoading)
+            updateProgressVisibility(isLoading)
         })
         viewModel.errorLiveData.observe(this.viewLifecycleOwner, {
             stringResource -> showMessage(stringResource)
@@ -51,11 +56,19 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     }
 
     private fun showDetails(movie: Movie) {
+        movie.backdropPath?.let{
+            image_backdrop.load("https://image.tmdb.org/t/p/original/$it")
+        }
         text_title.text = movie.title
+        text_overview_content.text = movie.overview
     }
 
     private fun updateProgressVisibility(isLoading: Boolean) {
         progress.visibility = if(isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun updateViewsVisibility(visible:Boolean){
+        group_views.visibility = if(visible) View.VISIBLE else View.GONE
     }
 
     private fun showMessage(stringResource:Int){
@@ -68,6 +81,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
     override fun onStart() {
         super.onStart()
+        updateViewsVisibility(false)
         viewModel.loadMovieDetails(args.movieId)
     }
 

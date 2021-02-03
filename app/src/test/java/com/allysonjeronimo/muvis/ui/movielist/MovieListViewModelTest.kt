@@ -36,6 +36,8 @@ class MovieListViewModelTest{
     @Before
     fun setup(){
         Dispatchers.setMain(testDispatcher)
+        instantiateViewModel()
+        mockList()
     }
 
     @After
@@ -44,19 +46,17 @@ class MovieListViewModelTest{
         testDispatcher.cleanupTestCoroutines()
     }
 
-    @Before
-    fun instantiateViewModel(){
+    private fun instantiateViewModel(){
         viewModel = MovieListViewModel(repository)
         viewModel.moviesLiveData.observeForever(moviesLiveDataObserver)
         viewModel.errorOnLoadingLiveData.observeForever(errorOnLoadingLiveDataObserver)
     }
 
-    @Before
-    fun mockList(){
+    private fun mockList(){
         mockedList = listOf(
-            Movie(1, "Movie 1", ""),
-            Movie(2, "Movie 2", ""),
-            Movie(3, "Movie 3", "")
+            Movie(1, "Movie 1", "Overview 1", "", ""),
+            Movie(2, "Movie 2", "Overview 2", "", ""),
+            Movie(3, "Movie 3", "Overview 3", "", "")
         )
     }
 
