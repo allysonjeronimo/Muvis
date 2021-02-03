@@ -31,7 +31,6 @@ class MovieDetailsViewModel(
                 _movieLiveData.value = movie
                 _isLoadingLiveData.value = false
             }catch(ex:Exception){
-                ex.printStackTrace()
                 _isLoadingLiveData.value = false
                 _errorOnLoadingLiveData.value = R.string.movie_details_error_on_loading
             }
