@@ -26,6 +26,8 @@ class MovieDetailsViewModelTest{
 
     private val testDispatcher = TestCoroutineDispatcher()
 
+    private lateinit var viewModel:MovieDetailsViewModel
+
     private val repository = mockk<MovieRepository>()
     private val movieLiveDataObserver = mockk<Observer<Movie>>(relaxed = true)
     private val errorOnLoadingLiveDataObserver = mockk<Observer<Int>>(relaxed=true)
@@ -41,16 +43,15 @@ class MovieDetailsViewModelTest{
         testDispatcher.cleanupTestCoroutines()
     }
 
-    private fun instantiateViewModel() : MovieDetailsViewModel{
-        val viewModel = MovieDetailsViewModel(repository)
+    @Before
+    fun instantiateViewModel() {
+        viewModel = MovieDetailsViewModel(repository)
         viewModel.movieLiveData.observeForever(movieLiveDataObserver)
         viewModel.errorLiveData.observeForever(errorOnLoadingLiveDataObserver)
-        return viewModel
     }
 
     @Test
     fun `when view model loadMovieDetails gets success then sets movieLiveData`(){
-        val viewModel = instantiateViewModel()
 
         val mockedMovie = Movie(1, "Title 1", "")
 
@@ -71,7 +72,6 @@ class MovieDetailsViewModelTest{
 
     @Test
     fun `when view model loadMovieDetails gets exception then sets errorOnLoadingLiveData`(){
-        val viewModel = instantiateViewModel()
 
         coEvery {
             repository.getDetails(1)
