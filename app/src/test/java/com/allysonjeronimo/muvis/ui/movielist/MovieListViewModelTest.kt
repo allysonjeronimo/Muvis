@@ -26,6 +26,9 @@ class MovieListViewModelTest{
 
     private val testDispatcher = TestCoroutineDispatcher()
 
+    private lateinit var viewModel:MovieListViewModel
+    private lateinit var mockedList:List<Movie>
+
     private val repository = mockk<MovieRepository>()
     private val moviesLiveDataObserver = mockk<Observer<List<Movie>>>(relaxed = true)
     private val errorOnLoadingLiveDataObserver  = mockk<Observer<Int>>(relaxed = true)
@@ -33,6 +36,8 @@ class MovieListViewModelTest{
     @Before
     fun setup(){
         Dispatchers.setMain(testDispatcher)
+        instantiateViewModel()
+        mockList()
     }
 
     @After
@@ -41,25 +46,31 @@ class MovieListViewModelTest{
         testDispatcher.cleanupTestCoroutines()
     }
 
+    private fun instantiateViewModel(){
+        viewModel = MovieListViewModel(repository)
+        viewModel.moviesLiveData.observeForever(moviesLiveDataObserver)
+        viewModel.errorOnLoadingLiveData.observeForever(errorOnLoadingLiveDataObserver)
+    }
+
+    private fun mockList(){
+        mockedList = listOf(
+            Movie(1, "Movie 1", "Overview 1", "", ""),
+            Movie(2, "Movie 2", "Overview 2", "", ""),
+            Movie(3, "Movie 3", "Overview 3", "", "")
+        )
+    }
+
     @Test
     fun `when view model loadMovies gets success then sets moviesLiveData`(){
 
-        val viewModel = instantiateViewModel()
-
-        val mockedList = listOf(
-            Movie(1, "Movie 1", ""),
-            Movie(2, "Movie 2", ""),
-            Movie(3, "Movie 3", "")
-        )
-
         coEvery {
-            repository.getMovies()
+            repository.getPopular()
         } returns mockedList
 
         viewModel.loadMovies()
 
         coVerify {
-            repository.getMovies()
+            repository.getPopular()
         }
         coVerify {
             moviesLiveDataObserver.onChanged(mockedList)
@@ -69,26 +80,18 @@ class MovieListViewModelTest{
     @Test
     fun `when view model loadMovies gets exception then sets errorOnLoadingLiveData`(){
 
-        val viewModel = instantiateViewModel()
-
         coEvery {
-            repository.getMovies()
+            repository.getPopular()
         } throws Exception()
 
         viewModel.loadMovies()
 
         coVerify {
-            repository.getMovies()
+            repository.getPopular()
         }
         coVerify {
             errorOnLoadingLiveDataObserver.onChanged(R.string.movie_list_error_on_loading)
         }
     }
 
-    private fun instantiateViewModel() : MovieListViewModel {
-        val viewModel = MovieListViewModel(repository)
-        viewModel.moviesLiveData.observeForever(moviesLiveDataObserver)
-        viewModel.errorOnLoadingLiveData.observeForever(errorOnLoadingLiveDataObserver)
-        return viewModel
-    }
 }
