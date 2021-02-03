@@ -68,7 +68,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     }
 
     private fun updateViewsVisibility(visible:Boolean){
-        group_views.visibility = if(visible) View.VISIBLE else View.GONE
+        view_details.visibility = if(visible) View.VISIBLE else View.GONE
     }
 
     private fun showMessage(stringResource:Int){
