@@ -10,6 +10,10 @@
         <item name="toolbarStyle">@style/ToolbarStyle</item>
     </style>
 
+    <style name="ActionBarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
+
     <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
         <item name="titleTextAppearance">@style/ToolbarStyle.Title</item>
     </style>

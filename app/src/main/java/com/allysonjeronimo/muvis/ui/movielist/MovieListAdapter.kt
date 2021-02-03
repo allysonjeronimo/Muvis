@@ -10,7 +10,8 @@ import com.allysonjeronimo.muvis.extensions.load
 import com.allysonjeronimo.muvis.model.db.entity.Movie
 
 class MovieListAdapter(
-    private val movies:List<Movie>
+    private val movies:List<Movie>,
+    private val onClick: (movie:Movie) -> Unit
 ) : RecyclerView.Adapter<MovieListAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,7 +22,11 @@ class MovieListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(movies[position])
+        val movie = movies[position]
+        holder.bind(movie)
+        holder.itemView.setOnClickListener {
+            onClick(movie)
+        }
     }
 
     override fun getItemCount():Int = movies.size
