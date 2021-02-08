@@ -9,4 +9,15 @@
     <string name="movie_details_title">Details</string>
     <string name="movie_details_error_on_loading">There was an error when loading movie details</string>
     <string name="movie_details_overview">Overview</string>
+
+    <!-- SearchFragment -->
+    <string name="search_title">Search</string>
+    <!-- FavoriteFragment -->
+    <string name="favorites_title">Favorites</string>
+
+    <!-- Bottom Navigation -->
+    <string name="navigation_popular">Popular</string>
+    <string name="navigation_favorites">Favorites</string>
+    <string name="navigation_search">Search</string>
+
 </resources>
