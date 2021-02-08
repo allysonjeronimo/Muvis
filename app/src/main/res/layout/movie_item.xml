@@ -11,7 +11,7 @@
         <ImageView
             android:id="@+id/image_poster"
             android:layout_width="0dp"
-            android:layout_height="160dp"
+            android:layout_height="@dimen/poster_height"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

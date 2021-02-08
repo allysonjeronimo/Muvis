@@ -3,20 +3,16 @@ package com.allysonjeronimo.muvis.ui.moviedetails
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import com.allysonjeronimo.muvis.R
 import com.allysonjeronimo.muvis.extensions.load
 import com.allysonjeronimo.muvis.model.db.entity.Movie
 import com.allysonjeronimo.muvis.model.network.MovieDBApi
 import com.allysonjeronimo.muvis.repository.MovieDataRepository
-import com.allysonjeronimo.muvis.repository.MovieRepository
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.movie_details_fragment.*
 import kotlinx.android.synthetic.main.movie_details_fragment.progress
-import kotlinx.android.synthetic.main.movie_list_fragment.*
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
@@ -68,7 +64,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     }
 
     private fun updateViewsVisibility(visible:Boolean){
-        group_views.visibility = if(visible) View.VISIBLE else View.GONE
+        view_details.visibility = if(visible) View.VISIBLE else View.GONE
     }
 
     private fun showMessage(stringResource:Int){
