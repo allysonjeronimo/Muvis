@@ -13,6 +13,13 @@
         <action
             android:id="@+id/action_movieListFragment_to_movieDetailsFragment"
             app:destination="@id/movieDetailsFragment" />
+        <action
+            android:id="@+id/action_movieListFragment_self2"
+            app:destination="@id/movieListFragment" />
+        <argument
+            android:name="favorites"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <fragment
@@ -30,10 +37,5 @@
         android:name="com.allysonjeronimo.muvis.ui.search.SearchFragment"
         android:label="@string/search_title"
         tools:layout="@layout/search_fragment" />
-    <fragment
-        android:id="@+id/favoritesFragment"
-        android:name="com.allysonjeronimo.muvis.ui.favorites.FavoritesFragment"
-        android:label="@string/favorites_title"
-        tools:layout="@layout/favorites_fragment" />
 
 </navigation>

@@ -10,7 +10,9 @@ data class MovieDBResponseItem(
     @SerializedName("poster_path")
     var posterPath:String?,
     @SerializedName("backdrop_path")
-    var backdropPath:String?
+    var backdropPath:String?,
+    @SerializedName("release_date")
+    var releasedate:String?
 ){
 
     fun toMovieEntity() : Movie {
@@ -19,7 +21,8 @@ data class MovieDBResponseItem(
             title,
             overview,
             posterPath,
-            backdropPath
+            backdropPath,
+            releasedate
         )
     }
 }

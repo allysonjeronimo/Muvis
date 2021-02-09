@@ -47,7 +47,7 @@ class MovieDetailsViewModelTest{
     private fun instantiateViewModel(){
         viewModel = MovieDetailsViewModel(repository)
         viewModel.movieLiveData.observeForever(movieLiveDataObserver)
-        viewModel.errorLiveData.observeForever(errorOnLoadingLiveDataObserver)
+        viewModel.errorOnLoadingLiveData.observeForever(errorOnLoadingLiveDataObserver)
     }
 
     @Test

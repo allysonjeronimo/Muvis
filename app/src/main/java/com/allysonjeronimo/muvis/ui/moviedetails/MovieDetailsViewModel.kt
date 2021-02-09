@@ -13,6 +13,7 @@ class MovieDetailsViewModel(
     private val _movieLiveData = MutableLiveData<Movie>()
     private val _isLoadingLiveData = MutableLiveData<Boolean>()
     private val _errorOnLoadingLiveData = MutableLiveData<Int>()
+    private val _errorOnUpdateLiveData = MutableLiveData<Int>()
 
     val movieLiveData: LiveData<Movie>
         get() = _movieLiveData
@@ -20,14 +21,29 @@ class MovieDetailsViewModel(
     val isLoadingLiveData:LiveData<Boolean>
         get() = _isLoadingLiveData
 
-    val errorLiveData:LiveData<Int>
+    val errorOnLoadingLiveData:LiveData<Int>
         get() = _errorOnLoadingLiveData
+
+    val errorOnUpdateLiveData:LiveData<Int>
+        get() = _errorOnUpdateLiveData
+
+    fun togglesFavorite(movie:Movie){
+        viewModelScope.launch {
+            try{
+                movie.togglesFavorite()
+                repository.update(movie)
+                _movieLiveData.value = movie
+            }catch(ex: Exception){
+                _errorOnUpdateLiveData.value = R.string.movie_details_error_on_update
+            }
+        }
+    }
 
     fun loadMovieDetails(id:Int){
         viewModelScope.launch {
             try{
                 _isLoadingLiveData.value = true
-                val movie = repository.getDetails(id)
+                val movie = repository.getMovie(id)
                 _movieLiveData.value = movie
                 _isLoadingLiveData.value = false
             }catch(ex:Exception){

@@ -2,6 +2,7 @@ package com.allysonjeronimo.muvis
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -36,6 +37,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBottomNavigation() {
         bottom_navigation.setupWithNavController(navController)
+        bottom_navigation.setOnNavigationItemSelectedListener { item ->
+            if(item.itemId == R.id.favoritesFragment){
+                val args = Bundle().apply {
+                    putBoolean("favorites", true)
+                }
+                navController.navigate(R.id.movieListFragment, args)
+            }
+            else{
+                navController.navigate(item.itemId)
+            }
+            true
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

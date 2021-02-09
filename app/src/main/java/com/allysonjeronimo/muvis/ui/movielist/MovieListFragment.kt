@@ -2,15 +2,21 @@ package com.allysonjeronimo.muvis.ui.movielist
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.allysonjeronimo.muvis.R
+import com.allysonjeronimo.muvis.model.db.AppDatabase
 import com.allysonjeronimo.muvis.model.db.entity.Movie
 import com.allysonjeronimo.muvis.model.network.MovieDBApi
 import com.allysonjeronimo.muvis.repository.MovieDataRepository
+import com.allysonjeronimo.muvis.ui.adapters.MovieListAdapter
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.movie_list_fragment.*
+import kotlinx.android.synthetic.main.movie_list_fragment.progress
+
 
 class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
 
@@ -24,8 +30,9 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
 
     private fun createViewModel(){
         val api = MovieDBApi.getService()
+        val dao = AppDatabase.getInstance(requireContext()).movieDao()
 
-        val repository = MovieDataRepository(api)
+        val repository = MovieDataRepository(dao, api)
 
         viewModel = ViewModelProvider(
             this,
@@ -73,6 +80,6 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
 
     override fun onStart() {
         super.onStart()
-        viewModel.loadMovies()
+        viewModel.loadMovies(arguments?.getBoolean("favorites") ?: false)
     }
 }
