@@ -6,6 +6,7 @@ import com.allysonjeronimo.muvis.R
 import com.allysonjeronimo.muvis.model.db.entity.Movie
 import com.allysonjeronimo.muvis.repository.MovieRepository
 import io.mockk.coEvery
+import io.mockk.coJustRun
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -53,16 +54,16 @@ class MovieDetailsViewModelTest{
     @Test
     fun `when view model loadMovieDetails gets success then sets movieLiveData`(){
 
-        val mockedMovie = Movie(1, "Title 1", "Overview 1", "", "")
+        val mockedMovie = mockMovie()
 
         coEvery {
-            repository.getDetails(1)
+            repository.getMovie(1)
         } returns mockedMovie
 
         viewModel.loadMovieDetails(1)
 
         coVerify {
-            repository.getDetails(1)
+            repository.getMovie(1)
         }
 
         coVerify {
@@ -70,17 +71,35 @@ class MovieDetailsViewModelTest{
         }
     }
 
+    private fun mockMovie(isFavorite:Boolean = false) =
+        Movie(1, "Title 1", "Overview 1", "", "", "", isFavorite)
+
+    @Test
+    fun `when view model togglesFavorite gets success then sets movieLiveData movie as favorite`(){
+        val mockedMovie = mockMovie(false)
+
+        coJustRun {
+            repository.update(mockedMovie)
+        }
+
+        viewModel.togglesFavorite(mockedMovie)
+
+        coVerify {
+            movieLiveDataObserver.onChanged(mockMovie(true))
+        }
+    }
+
     @Test
     fun `when view model loadMovieDetails gets exception then sets errorOnLoadingLiveData`(){
 
         coEvery {
-            repository.getDetails(1)
+            repository.getMovie(1)
         } throws Exception()
 
         viewModel.loadMovieDetails(1)
 
         coVerify {
-            repository.getDetails(1)
+            repository.getMovie(1)
         }
 
         coVerify {

@@ -28,6 +28,7 @@ class MovieListViewModelTest{
 
     private lateinit var viewModel:MovieListViewModel
     private lateinit var mockedList:List<Movie>
+    private lateinit var mockedFavoritesList:List<Movie>
 
     private val repository = mockk<MovieRepository>()
     private val moviesLiveDataObserver = mockk<Observer<List<Movie>>>(relaxed = true)
@@ -37,7 +38,7 @@ class MovieListViewModelTest{
     fun setup(){
         Dispatchers.setMain(testDispatcher)
         instantiateViewModel()
-        mockList()
+        mockLists()
     }
 
     @After
@@ -52,25 +53,27 @@ class MovieListViewModelTest{
         viewModel.errorOnLoadingLiveData.observeForever(errorOnLoadingLiveDataObserver)
     }
 
-    private fun mockList(){
+    private fun mockLists(){
         mockedList = listOf(
-            Movie(1, "Movie 1", "Overview 1", "", ""),
-            Movie(2, "Movie 2", "Overview 2", "", ""),
-            Movie(3, "Movie 3", "Overview 3", "", "")
+            Movie(1, "Movie 1", "Overview 1", "", "", "", false),
+            Movie(2, "Movie 2", "Overview 2", "", "", "", false),
+            Movie(3, "Movie 3", "Overview 3", "", "", "", true),
+            Movie(4, "Movie 4", "Overview 4", "", "", "", true)
         )
+        mockedFavoritesList = mockedList.filter { it.isFavorite }
     }
 
     @Test
     fun `when view model loadMovies gets success then sets moviesLiveData`(){
 
         coEvery {
-            repository.getPopular()
+            repository.getMovies()
         } returns mockedList
 
         viewModel.loadMovies()
 
         coVerify {
-            repository.getPopular()
+            repository.getMovies()
         }
         coVerify {
             moviesLiveDataObserver.onChanged(mockedList)
@@ -78,16 +81,33 @@ class MovieListViewModelTest{
     }
 
     @Test
+    fun `when view model loadMovies with favorites param then sets moviesLiveData with favorite movies`(){
+
+        coEvery {
+            repository.getFavoriteMovies()
+        } returns mockedFavoritesList
+
+        viewModel.loadMovies(true)
+
+        coVerify {
+            repository.getFavoriteMovies()
+        }
+        coVerify {
+            moviesLiveDataObserver.onChanged(mockedFavoritesList)
+        }
+    }
+
+    @Test
     fun `when view model loadMovies gets exception then sets errorOnLoadingLiveData`(){
 
         coEvery {
-            repository.getPopular()
+            repository.getMovies()
         } throws Exception()
 
         viewModel.loadMovies()
 
         coVerify {
-            repository.getPopular()
+            repository.getMovies()
         }
         coVerify {
             errorOnLoadingLiveDataObserver.onChanged(R.string.movie_list_error_on_loading)
