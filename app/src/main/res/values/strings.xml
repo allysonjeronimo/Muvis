@@ -3,6 +3,7 @@
 
     <!-- MovieListFragment-->
     <string name="movie_list_title">Movies</string>
+    <string name="favorites_title">Favorites</string>
     <string name="movie_list_error_on_loading">There was an error when loading movies</string>
 
     <!-- MovieDetailsFragment -->
@@ -13,8 +14,6 @@
 
     <!-- SearchFragment -->
     <string name="search_title">Search</string>
-    <!-- FavoriteFragment -->
-    <string name="favorites_title">Favorites</string>
 
     <!-- Bottom Navigation -->
     <string name="navigation_popular">Popular</string>

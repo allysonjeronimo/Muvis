@@ -3,6 +3,7 @@ package com.allysonjeronimo.muvis.ui.movielist
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -21,11 +22,27 @@ import kotlinx.android.synthetic.main.movie_list_fragment.progress
 class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
 
     private lateinit var viewModel: MovieListViewModel
+    private var favorites = false
+
+    companion object{
+        const val PARAM_FAVORITES = "favorites"
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setupArguments()
         createViewModel()
         observeEvents()
+    }
+
+    private fun setupArguments() {
+        arguments?.getBoolean(PARAM_FAVORITES)?.let {
+            favorites = it
+            if(favorites){
+                val activity = requireActivity() as AppCompatActivity
+                activity.supportActionBar?.title = resources.getString(R.string.favorites_title)
+            }
+        }
     }
 
     private fun createViewModel(){
@@ -80,6 +97,6 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
 
     override fun onStart() {
         super.onStart()
-        viewModel.loadMovies(arguments?.getBoolean("favorites") ?: false)
+        viewModel.loadMovies(favorites)
     }
 }
