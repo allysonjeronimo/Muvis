@@ -23,13 +23,13 @@ class MovieListViewModel(
     val errorOnLoadingLiveData:LiveData<Int>
         get() = _errorOnLoadingLiveData
 
-    fun loadMovies(favorites:Boolean = false){
+    fun loadMovies(favorites:Boolean = false, refresh:Boolean = false){
         viewModelScope.launch {
             try{
                 _isLoadingLiveData.value = true
                 _moviesLiveData.value =
                     if(!favorites)
-                        repository.getMovies()
+                        repository.getMovies(refresh)
                     else
                         repository.getFavoriteMovies()
                 _isLoadingLiveData.value = false

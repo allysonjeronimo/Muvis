@@ -12,10 +12,12 @@ class MovieDataRepository(
     private val api: MovieDBApi
 ) : MovieRepository{
 
-    override suspend fun getMovies(): List<Movie> {
+    override suspend fun getMovies(refresh:Boolean): List<Movie> {
         return withContext(Dispatchers.IO){
-            val movies = api.getPopular(API_KEY).getMoviesAsEntities()
-            dao.insertAll(movies)
+            if(refresh){
+                val movies = api.getPopular(API_KEY).getMoviesAsEntities()
+                dao.insertAll(movies)
+            }
             dao.getAll()
         }
     }

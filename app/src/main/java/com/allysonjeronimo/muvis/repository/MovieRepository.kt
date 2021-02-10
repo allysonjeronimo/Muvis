@@ -4,7 +4,7 @@ import com.allysonjeronimo.muvis.model.db.entity.Movie
 
 interface MovieRepository {
 
-    suspend fun getMovies() : List<Movie>
+    suspend fun getMovies(refresh:Boolean = false) : List<Movie>
 
     suspend fun getFavoriteMovies() : List<Movie>
 

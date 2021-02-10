@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.allysonjeronimo.muvis.R
+import com.allysonjeronimo.muvis.extensions.isConnected
 import com.allysonjeronimo.muvis.model.db.AppDatabase
 import com.allysonjeronimo.muvis.model.db.entity.Movie
 import com.allysonjeronimo.muvis.model.network.MovieDBApi
@@ -97,6 +98,6 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
 
     override fun onStart() {
         super.onStart()
-        viewModel.loadMovies(favorites)
+        viewModel.loadMovies(favorites, requireContext().isConnected())
     }
 }

@@ -5,5 +5,6 @@ import android.net.ConnectivityManager
 
 fun Context.isConnected() : Boolean{
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    return false
+    val info = connectivityManager.activeNetworkInfo
+    return info != null && info.isConnected
 }
