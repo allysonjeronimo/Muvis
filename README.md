@@ -13,10 +13,10 @@ App Android de catálogo de filmes utilizando Kotlin e arquitetura MVVM.
 - Favoritos
 - Busca de filmes (Em desenvolvimento)
 
-## Tecnologias
+## Principais Dependências
 
-- Kotlin
 - Room
+- Navigation
 - Material Design
 - Retrofit
 - Picasso
