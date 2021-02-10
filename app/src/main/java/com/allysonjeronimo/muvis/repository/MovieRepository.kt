@@ -4,7 +4,11 @@ import com.allysonjeronimo.muvis.model.db.entity.Movie
 
 interface MovieRepository {
 
-    suspend fun getPopular() : List<Movie>
+    suspend fun getMovies(refresh:Boolean = false) : List<Movie>
 
-    suspend fun getDetails(movieId:Int) : Movie
+    suspend fun getFavoriteMovies() : List<Movie>
+
+    suspend fun getMovie(movieId:Int) : Movie
+
+    suspend fun update(movie:Movie)
 }

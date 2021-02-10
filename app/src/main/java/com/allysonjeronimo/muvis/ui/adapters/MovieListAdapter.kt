@@ -1,4 +1,4 @@
-package com.allysonjeronimo.muvis.ui.movielist
+package com.allysonjeronimo.muvis.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
