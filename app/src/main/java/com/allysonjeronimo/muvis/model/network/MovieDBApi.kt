@@ -2,6 +2,7 @@ package com.allysonjeronimo.muvis.model.network
 
 import com.allysonjeronimo.muvis.model.network.entity.MovieDBResponse
 import com.allysonjeronimo.muvis.model.network.entity.MovieDBResponseItem
+import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -20,11 +21,13 @@ interface MovieDBApi {
         @Path("movie_id") movieId:Int,
         @Query("api_key") apiKey:String
         )
-    : MovieDBResponseItem
+    : Single<MovieDBResponseItem>
 
     companion object{
 
         fun getService() : MovieDBApi{
+
+            // Create interceptor for apiKey
 
             return Retrofit
                 .Builder()
