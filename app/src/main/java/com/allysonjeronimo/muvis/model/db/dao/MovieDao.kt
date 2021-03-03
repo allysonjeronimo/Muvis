@@ -2,23 +2,25 @@ package com.allysonjeronimo.muvis.model.db.dao
 
 import androidx.room.*
 import com.allysonjeronimo.muvis.model.db.entity.Movie
+import io.reactivex.Completable
+import io.reactivex.Single
 
 @Dao
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(movies:List<Movie>)
+    fun insertAll(movies:List<Movie>)
 
     @Update
-    suspend fun update(movie:Movie)
+    fun update(movie:Movie) : Completable
 
     @Query("SELECT * FROM Movie WHERE id = :id")
-    suspend fun getById(id:Int) : Movie
+    fun getById(id:Int) : Single<Movie>
 
     @Query("SELECT * FROM Movie")
-    suspend fun getAll() : List<Movie>
+    fun getAll() : Single<List<Movie>>
 
     @Query("SELECT * FROM Movie WHERE isFavorite = 1")
-    suspend fun getAllFavorites() : List<Movie>
+    fun getAllFavorites() : Single<List<Movie>>
 
 }
