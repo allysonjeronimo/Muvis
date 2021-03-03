@@ -4,11 +4,15 @@ import androidx.lifecycle.*
 import com.allysonjeronimo.muvis.R
 import com.allysonjeronimo.muvis.model.db.entity.Movie
 import com.allysonjeronimo.muvis.repository.MovieRepository
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.launch
 
 class MovieDetailsViewModel(
     private val repository: MovieRepository
 ) : ViewModel() {
+
+    private val compositeDisposable = CompositeDisposable()
 
     private val _movieLiveData = MutableLiveData<Movie>()
     private val _isLoadingLiveData = MutableLiveData<Boolean>()
@@ -40,16 +44,25 @@ class MovieDetailsViewModel(
     }
 
     fun loadMovieDetails(id:Int){
-        viewModelScope.launch {
-            try{
-                _isLoadingLiveData.value = true
-                val movie = repository.getMovie(id)
-                _movieLiveData.value = movie
-                _isLoadingLiveData.value = false
-            }catch(ex:Exception){
-                _isLoadingLiveData.value = false
-                _errorOnLoadingLiveData.value = R.string.movie_details_error_on_loading
-            }
+        try{
+            _isLoadingLiveData.value = true
+            compositeDisposable.add(
+                repository.getMovie(id)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(
+                        {
+                            _movieLiveData.postValue(it)
+                        },
+                        {
+                            it.printStackTrace()
+                            _errorOnLoadingLiveData.value = R.string.movie_details_error_on_loading
+                        })
+            )
+            _isLoadingLiveData.value = false
+        }catch(ex:Exception){
+            ex.printStackTrace()
+            _isLoadingLiveData.value = false
+            _errorOnLoadingLiveData.value = R.string.movie_details_error_on_loading
         }
     }
 

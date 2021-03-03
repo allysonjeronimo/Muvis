@@ -10,8 +10,8 @@ import com.allysonjeronimo.muvis.extensions.load
 import com.allysonjeronimo.muvis.extensions.setIcon
 import com.allysonjeronimo.muvis.model.db.AppDatabase
 import com.allysonjeronimo.muvis.model.db.entity.Movie
-import com.allysonjeronimo.muvis.model.network.MovieDBApi
-import com.allysonjeronimo.muvis.repository.MovieDataRepository
+import com.allysonjeronimo.muvis.model.network.MovieDBClient
+import com.allysonjeronimo.muvis.repository.MovieDataSource
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.movie_details_fragment.*
 import kotlinx.android.synthetic.main.movie_details_fragment.progress
@@ -31,8 +31,8 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
     private fun createViewModel() {
         val dao = AppDatabase.getInstance(requireContext()).movieDao()
-        val api = MovieDBApi.getService()
-        val repository = MovieDataRepository(dao, api)
+        val api = MovieDBClient.getMovieDBApi()
+        val repository = MovieDataSource(dao, api)
 
         viewModel = ViewModelProvider(
             this,
