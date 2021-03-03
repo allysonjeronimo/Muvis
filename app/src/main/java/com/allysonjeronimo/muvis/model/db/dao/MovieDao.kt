@@ -12,7 +12,7 @@ interface MovieDao {
     fun insertAll(movies:List<Movie>)
 
     @Update
-    fun update(movie:Movie)
+    fun update(movie:Movie) : Completable
 
     @Query("SELECT * FROM Movie WHERE id = :id")
     fun getById(id:Int) : Single<Movie>

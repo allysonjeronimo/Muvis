@@ -5,6 +5,7 @@ import com.allysonjeronimo.muvis.R
 import com.allysonjeronimo.muvis.model.db.entity.Movie
 import com.allysonjeronimo.muvis.repository.MovieRepository
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.launch
 
@@ -32,38 +33,36 @@ class MovieDetailsViewModel(
         get() = _errorOnUpdateLiveData
 
     fun togglesFavorite(movie:Movie){
-        viewModelScope.launch {
-            try{
-                movie.togglesFavorite()
-                repository.update(movie)
-                _movieLiveData.value = movie
-            }catch(ex: Exception){
-                _errorOnUpdateLiveData.value = R.string.movie_details_error_on_update
-            }
-        }
+        movie.togglesFavorite()
+        repository.update(movie)
+            .subscribeOn(Schedulers.io())
+            .doOnSubscribe { _isLoadingLiveData.postValue(true)}
+            .doAfterTerminate{_isLoadingLiveData.postValue(false)}
+            .subscribe(
+                {
+                    _movieLiveData.postValue(movie)
+                },
+                {
+                    _errorOnUpdateLiveData.postValue(R.string.movie_details_error_on_update)
+                }
+            )
+            .addTo(compositeDisposable)
     }
 
     fun loadMovieDetails(id:Int){
-        try{
-            _isLoadingLiveData.value = true
-            compositeDisposable.add(
-                repository.getMovie(id)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        {
-                            _movieLiveData.postValue(it)
-                        },
-                        {
-                            it.printStackTrace()
-                            _errorOnLoadingLiveData.value = R.string.movie_details_error_on_loading
-                        })
-            )
-            _isLoadingLiveData.value = false
-        }catch(ex:Exception){
-            ex.printStackTrace()
-            _isLoadingLiveData.value = false
-            _errorOnLoadingLiveData.value = R.string.movie_details_error_on_loading
-        }
+        repository.getMovie(id)
+            .subscribeOn(Schedulers.io())
+            .doOnSubscribe {_isLoadingLiveData.postValue(true)}
+            .doAfterTerminate { _isLoadingLiveData.postValue(false) }
+            .subscribe(
+                {
+                    _movieLiveData.postValue(it)
+                },
+                {
+                    it.printStackTrace()
+                    _errorOnLoadingLiveData.value = R.string.movie_details_error_on_loading
+                }
+            ).addTo(compositeDisposable)
     }
 
     class MovieDetailsViewModelFactory(

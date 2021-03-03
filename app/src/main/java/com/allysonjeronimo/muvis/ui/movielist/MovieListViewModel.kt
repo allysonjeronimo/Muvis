@@ -6,6 +6,7 @@ import com.allysonjeronimo.muvis.repository.MovieRepository
 import kotlinx.coroutines.launch
 import com.allysonjeronimo.muvis.R
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 
 class MovieListViewModel(
@@ -28,30 +29,22 @@ class MovieListViewModel(
         get() = _errorOnLoadingLiveData
 
     private fun getMovies(favorite:Boolean) =
-        if(!favorite) repository.getMovies(compositeDisposable) else repository.getFavoriteMovies()
+        if(!favorite) repository.getMovies() else repository.getFavoriteMovies()
 
     fun loadMovies(favorite: Boolean = false){
-        try{
-            _isLoadingLiveData.value = true
-            compositeDisposable.add(
-                getMovies(favorite)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        {
-                            _moviesLiveData.postValue(it)
-                        },
-                        {
-                            it.printStackTrace()
-                            _errorOnLoadingLiveData.value = R.string.movie_list_error_on_loading
-                        }
-                    )
-            )
-            _isLoadingLiveData.value = false
-        }catch(ex:Exception){
-            ex.printStackTrace()
-            _isLoadingLiveData.value = false
-            _errorOnLoadingLiveData.value = R.string.movie_list_error_on_loading
-        }
+        getMovies(favorite)
+            .subscribeOn(Schedulers.io())
+            .doOnSubscribe { _isLoadingLiveData.postValue(true) }
+            .doAfterTerminate {  _isLoadingLiveData.postValue(false)}
+            .subscribe(
+                {
+                    _moviesLiveData.postValue(it)
+                },
+                {
+                    it.printStackTrace()
+                    _errorOnLoadingLiveData.postValue(R.string.movie_list_error_on_loading)
+                }
+            ).addTo(compositeDisposable)
     }
 
     override fun onCleared() {
