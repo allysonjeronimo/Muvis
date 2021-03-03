@@ -5,10 +5,15 @@ import com.allysonjeronimo.muvis.model.db.entity.Movie
 import com.allysonjeronimo.muvis.repository.MovieRepository
 import kotlinx.coroutines.launch
 import com.allysonjeronimo.muvis.R
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 
 class MovieListViewModel(
     private val repository:MovieRepository
-) : ViewModel() {
+) : ViewModel(){
+
+    private val compositeDisposable = CompositeDisposable()
 
     private val _moviesLiveData = MutableLiveData<List<Movie>>()
     private val _isLoadingLiveData = MutableLiveData<Boolean>()
@@ -23,21 +28,28 @@ class MovieListViewModel(
     val errorOnLoadingLiveData:LiveData<Int>
         get() = _errorOnLoadingLiveData
 
-    fun loadMovies(favorites:Boolean = false, refresh:Boolean = false){
-        viewModelScope.launch {
-            try{
-                _isLoadingLiveData.value = true
-                _moviesLiveData.value =
-                    if(!favorites)
-                        repository.getMovies(refresh)
-                    else
-                        repository.getFavoriteMovies()
-                _isLoadingLiveData.value = false
-            }catch(ex:Exception){
-                _isLoadingLiveData.value = false
-                _errorOnLoadingLiveData.value = R.string.movie_list_error_on_loading
-            }
-        }
+    private fun getMovies(favorite:Boolean) =
+        if(!favorite) repository.getMovies() else repository.getFavoriteMovies()
+
+    fun loadMovies(favorite: Boolean = false){
+        getMovies(favorite)
+            .subscribeOn(Schedulers.io())
+            .doOnSubscribe { _isLoadingLiveData.postValue(true) }
+            .doAfterTerminate {  _isLoadingLiveData.postValue(false)}
+            .subscribe(
+                {
+                    _moviesLiveData.postValue(it)
+                },
+                {
+                    it.printStackTrace()
+                    _errorOnLoadingLiveData.postValue(R.string.movie_list_error_on_loading)
+                }
+            ).addTo(compositeDisposable)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
     }
 
     class MovieListViewModelFactory(
