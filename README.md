@@ -20,7 +20,7 @@ App Android de catálogo de filmes utilizando Kotlin e arquitetura MVVM.
 - Material Design
 - Retrofit
 - Picasso
-- Coroutines
+- RxJava
 - MockK
 - JUnit
 
