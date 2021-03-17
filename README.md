@@ -23,6 +23,7 @@ App Android de catálogo de filmes utilizando Kotlin e arquitetura MVVM.
 - RxJava
 - MockK
 - JUnit
+- Dagger 
 
 ## API
 
