@@ -7,20 +7,22 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.allysonjeronimo.muvis.R
-import com.allysonjeronimo.muvis.extensions.isConnected
-import com.allysonjeronimo.muvis.model.db.AppDatabase
+import com.allysonjeronimo.muvis.di.DaggerAppComponent
+import com.allysonjeronimo.muvis.di.DataModule
 import com.allysonjeronimo.muvis.model.db.entity.Movie
-import com.allysonjeronimo.muvis.model.network.MovieDBClient
-import com.allysonjeronimo.muvis.repository.MovieDataSource
+import com.allysonjeronimo.muvis.repository.MovieRepository
 import com.allysonjeronimo.muvis.ui.adapters.MovieListAdapter
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.movie_list_fragment.*
+import javax.inject.Inject
 
 
 class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
 
     private lateinit var viewModel: MovieListViewModel
     private var favorites = false
+    @Inject
+    lateinit var repository: MovieRepository
 
     companion object{
         const val PARAM_FAVORITES = "favorites"
@@ -29,6 +31,7 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupArguments()
+        setupComponent()
         createViewModel()
         observeEvents()
     }
@@ -43,12 +46,14 @@ class MovieListFragment : Fragment(R.layout.movie_list_fragment) {
         }
     }
 
+    private fun setupComponent(){
+        val component = DaggerAppComponent.builder()
+            .dataModule(DataModule(requireContext()))
+            .build()
+        component.inject(this)
+    }
+
     private fun createViewModel(){
-        val api = MovieDBClient.getMovieDBApi()
-        val dao = AppDatabase.getInstance(requireContext()).movieDao()
-
-        val repository = MovieDataSource(dao, api)
-
         viewModel = ViewModelProvider(
             this,
             MovieListViewModel.MovieListViewModelFactory(repository))
