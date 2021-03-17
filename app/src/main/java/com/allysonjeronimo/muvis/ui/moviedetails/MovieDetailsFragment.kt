@@ -6,34 +6,46 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.allysonjeronimo.muvis.R
+import com.allysonjeronimo.muvis.di.DaggerAppComponent
+import com.allysonjeronimo.muvis.di.DataModule
 import com.allysonjeronimo.muvis.extensions.load
 import com.allysonjeronimo.muvis.extensions.setIcon
 import com.allysonjeronimo.muvis.model.db.AppDatabase
 import com.allysonjeronimo.muvis.model.db.entity.Movie
 import com.allysonjeronimo.muvis.model.network.MovieDBClient
 import com.allysonjeronimo.muvis.repository.MovieDataSource
+import com.allysonjeronimo.muvis.repository.MovieRepository
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.movie_details_fragment.*
 import kotlinx.android.synthetic.main.movie_details_fragment.progress
+import javax.inject.Inject
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
     private lateinit var viewModel: MovieDetailsViewModel
     private val args:MovieDetailsFragmentArgs by navArgs()
     private lateinit var movie:Movie
+    @Inject
+    lateinit var repository: MovieRepository
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setupComponent()
         createViewModel()
         observeEvents()
         setListeners()
     }
 
-    private fun createViewModel() {
-        val dao = AppDatabase.getInstance(requireContext()).movieDao()
-        val api = MovieDBClient.getMovieDBApi()
-        val repository = MovieDataSource(dao, api)
+    private fun setupComponent() {
+        val component = DaggerAppComponent
+            .builder()
+            .dataModule(DataModule(requireContext()))
+            .build()
 
+        component.inject(this)
+    }
+
+    private fun createViewModel() {
         viewModel = ViewModelProvider(
             this,
             MovieDetailsViewModel.MovieDetailsViewModelFactory(repository)

@@ -7,7 +7,7 @@ buildscript {
         retrofit_coroutines_version = '0.9.2'
         retrofit_rxjava_version = '2.9.0'
         paging_version = "2.1.2"
-        recycler_view_version = "1.1.0"
+        recycler_view_version = "1.2.0-beta02"
         card_view_version = "1.0.0"
         navigation_version = "2.3.3"
         material_design_version = "1.0.0"

@@ -66,6 +66,7 @@ dependencies {
 
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
+    // Recycler View
     implementation "androidx.recyclerview:recyclerview:$recycler_view_version"
     implementation "androidx.cardview:cardview:$card_view_version"
 
@@ -113,4 +114,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
 
+    // Dagger
+    implementation 'com.google.dagger:dagger:2.27'
+    kapt 'com.google.dagger:dagger-compiler:2.27'
 }
