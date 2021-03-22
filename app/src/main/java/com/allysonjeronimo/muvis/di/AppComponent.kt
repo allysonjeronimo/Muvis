@@ -1,7 +1,5 @@
 package com.allysonjeronimo.muvis.di
 
-import android.app.Application
-import android.content.Context
 import com.allysonjeronimo.muvis.ui.moviedetails.MovieDetailsFragment
 import com.allysonjeronimo.muvis.ui.movielist.MovieListFragment
 import dagger.Component
